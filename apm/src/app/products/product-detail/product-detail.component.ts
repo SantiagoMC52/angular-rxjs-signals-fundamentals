@@ -10,7 +10,6 @@ import { NgIf, NgFor, CurrencyPipe } from '@angular/common';
 import { Product } from '../product';
 import { ProductService } from '../product.service';
 import { EMPTY, Subscription, catchError } from 'rxjs';
-import { HttpErrorService } from 'src/app/utilities/http-error.service';
 
 @Component({
   selector: 'pm-product-detail',
