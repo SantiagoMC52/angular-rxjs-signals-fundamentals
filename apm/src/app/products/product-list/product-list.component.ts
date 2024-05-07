@@ -24,11 +24,11 @@ export class ProductListComponent {
   );
 
   // Selected product id to highlight the entry
-  selectedProductId: number = 0;
+  readonly selectedProductId$ = this.productsService.productSelected$;
 
   constructor(private productsService: ProductService) {}
 
   onSelected(productId: number): void {
-    this.selectedProductId = productId;
+    this.productsService.productSelected(productId);
   }
 }

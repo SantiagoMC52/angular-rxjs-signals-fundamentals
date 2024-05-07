@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import {
+  BehaviorSubject,
   Observable,
   catchError,
+  combineLatest,
+  filter,
   map,
   of,
   shareReplay,
@@ -26,9 +29,33 @@ export class ProductService {
     private reviewService: ReviewService,
   ) {}
 
+  private productSelectedSubject = new BehaviorSubject<number | undefined>(
+    undefined,
+  );
+  readonly productSelected$ = this.productSelectedSubject.asObservable();
+
   readonly products$ = this.http.get<Product[]>(this.productsUrl).pipe(
     tap((p) => console.log(JSON.stringify(p))),
     shareReplay(1),
+    catchError((err) => this.handleError(err)),
+  );
+
+  readonly product1$ = this.productSelected$.pipe(
+    filter(Boolean),
+    switchMap((id) => {
+      return this.http.get<Product>(`${this.productsUrl}/${id}`).pipe(
+        switchMap((product) => this.getProductWithReviews(product)),
+        catchError((err) => this.handleError(err)),
+      );
+    }),
+  );
+
+  product$ = combineLatest([this.productSelected$, this.products$]).pipe(
+    map(([selectedProductId, products]) =>
+      products.find((product) => product.id === selectedProductId),
+    ),
+    filter(Boolean),
+    switchMap((product) => this.getProductWithReviews(product)),
     catchError((err) => this.handleError(err)),
   );
 
@@ -38,6 +65,10 @@ export class ProductService {
       tap((x) => console.log('x->', x)),
       catchError((err) => this.handleError(err)),
     );
+  }
+
+  productSelected(selectedProductId: number): void {
+    this.productSelectedSubject.next(selectedProductId);
   }
 
   private getProductWithReviews(product: Product): Observable<Product> {
