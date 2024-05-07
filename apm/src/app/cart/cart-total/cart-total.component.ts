@@ -1,19 +1,19 @@
 import { Component } from '@angular/core';
 import { NgIf, CurrencyPipe } from '@angular/common';
+import { CartService } from '../cart.service';
 
 @Component({
   selector: 'sw-cart-total',
   templateUrl: './cart-total.component.html',
   standalone: true,
-  imports: [NgIf, CurrencyPipe]
+  imports: [NgIf, CurrencyPipe],
 })
 export class CartTotalComponent {
-  // Just enough here for the template to compile
-  cartItems = [];
+  constructor(private cartService: CartService) {}
+  cartItems = this.cartService.cartItems;
 
-  subTotal = 100;
-  deliveryFee = 20;
-  tax = 10;
-  totalPrice = this.subTotal + this.deliveryFee + this.tax;
-
+  subTotal = this.cartService.subTotal;
+  deliveryFee = this.cartService.deliveryFee;
+  tax = this.cartService.tax;
+  totalPrice = this.cartService.totalPrice;
 }
