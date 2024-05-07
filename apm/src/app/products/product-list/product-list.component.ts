@@ -16,12 +16,7 @@ export class ProductListComponent {
   errorMessage = '';
 
   // Products
-  readonly products$ = this.productsService.products$.pipe(
-    catchError((err) => {
-      this.errorMessage = err;
-      return EMPTY;
-    }),
-  );
+  products = this.productsService.products;
 
   // Selected product id to highlight the entry
   readonly selectedProductId$ = this.productsService.productSelected$;
