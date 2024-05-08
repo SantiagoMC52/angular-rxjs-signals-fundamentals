@@ -18,9 +18,8 @@ export class ProductListComponent {
   products = this.productsService.products;
   errorMessage = this.productsService.productsError;
 
-
   // Selected product id to highlight the entry
-  readonly selectedProductId$ = this.productsService.productSelected$;
+  selectedProductId = this.productsService.selectedProductId;
 
   constructor(private productsService: ProductService) {}
 

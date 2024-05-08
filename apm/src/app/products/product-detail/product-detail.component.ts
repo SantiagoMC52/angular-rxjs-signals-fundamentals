@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, computed } from '@angular/core';
 
 import { NgIf, NgFor, CurrencyPipe, AsyncPipe } from '@angular/common';
 import { Product } from '../product';
@@ -14,26 +14,22 @@ import { CartService } from 'src/app/cart/cart.service';
 })
 export class ProductDetailComponent {
   @Input() productId: number = 0;
-  errorMessage = '';
-
-  // Product to display
-  product$ = this.productsService.product$.pipe(
-    catchError((err) => {
-      this.errorMessage = err;
-      return EMPTY;
-    }),
-  );
-
-  // Set the page title
-  // pageTitle = this.product
-  //   ? `Product Detail for: ${this.product.productName}`
-  //   : 'Product Detail';
-  pageTitle = 'Product Detail';
 
   constructor(
     private productsService: ProductService,
     private cartService: CartService,
   ) {}
+
+  // Product to display
+  product = this.productsService.product;
+  errorMessage = this.productsService.productError;
+
+  // Set the page title
+  pageTitle = computed(() =>
+    this.product()
+      ? `Product Detail for: ${this.product()?.productName}`
+      : 'Product Detail',
+  );
 
   addToCart(product: Product) {
     this.cartService.addToCart(product);
