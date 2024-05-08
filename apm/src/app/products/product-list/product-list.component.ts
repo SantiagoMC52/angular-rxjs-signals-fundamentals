@@ -13,10 +13,11 @@ import { EMPTY, catchError, tap } from 'rxjs';
 })
 export class ProductListComponent {
   pageTitle = 'Products';
-  errorMessage = '';
 
   // Products
   products = this.productsService.products;
+  errorMessage = this.productsService.productsError;
+
 
   // Selected product id to highlight the entry
   readonly selectedProductId$ = this.productsService.productSelected$;
